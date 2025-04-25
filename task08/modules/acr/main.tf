@@ -1,5 +1,5 @@
 resource "azurerm_container_registry" "acr" {
-  name                = "cmtr93253787mod8cr"
+  name                = var.container_registry_name
   resource_group_name = var.resource_group_name
   location            = var.location
   sku                 = var.sku
