@@ -68,12 +68,12 @@ module "aci" {
 
   source               = "./modules/aci"
   container_group_name = local.aci_name
-  key_vault_id         = module.keyvault.id
-  dns_name_label       = local.aci_name
-  location             = var.location
-  redis_hostname       = azurerm_key_vault_secret.redis_hostname.value
-  redis_primary_key    = azurerm_key_vault_secret.redis_primary_key.value
-  resource_group_name  = azurerm_resource_group.rg.name
+  # key_vault_id         = module.keyvault.id
+  dns_name_label      = local.aci_name
+  location            = var.location
+  redis_hostname      = azurerm_key_vault_secret.redis_hostname.value
+  redis_primary_key   = azurerm_key_vault_secret.redis_primary_key.value
+  resource_group_name = azurerm_resource_group.rg.name
   tags = {
     tag = "Azure Container Instance"
   }

@@ -48,10 +48,10 @@ variable "tags" {
   description = "creator tag"
 }
 
-variable "key_vault_id" {
-  type        = string
-  description = "value"
-}
+# variable "key_vault_id" {
+#   type        = string
+#   description = "value"
+# }
 
 variable "dns_name_label" {
   type        = string

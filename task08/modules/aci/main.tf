@@ -1,12 +1,12 @@
-data "azurerm_key_vault_secret" "redis_hostname" {
-  name         = "redis-hostname"
-  key_vault_id = var.key_vault_id
-}
+# data "azurerm_key_vault_secret" "redis_hostname" {
+#   name         = "redis-hostname"
+#   key_vault_id = var.key_vault_id
+# }
 
-data "azurerm_key_vault_secret" "redis_primary_key" {
-  name         = "redis-primary-key"
-  key_vault_id = var.key_vault_id
-}
+# data "azurerm_key_vault_secret" "redis_primary_key" {
+#   name         = "redis-primary-key"
+#   key_vault_id = var.key_vault_id
+# }
 
 resource "azurerm_container_group" "container" {
   name                = var.container_group_name
