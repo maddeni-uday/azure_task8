@@ -31,3 +31,9 @@ variable "git_pat" {
   type        = string
   sensitive   = true
 }
+
+variable "acr_name" {
+  description = "value"
+  type        = string
+
+}

@@ -69,7 +69,7 @@ module "acr" {
 
   source = "./modules/acr"
 
-  container_registry_name = local.acr_name
+  container_registry_name = var.acr_name
   resource_group_name     = azurerm_resource_group.rg.name
   os_type                 = "Linux"
   sku                     = "Basic"
