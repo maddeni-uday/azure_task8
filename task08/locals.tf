@@ -1,13 +1,12 @@
 locals {
   # Naming Convention for Resources
-  name_prefix       = "cmtr-93253787-mod8"
-  rg_name           = "${local.name_prefix}-rg"
-  aci_name          = "${local.name_prefix}-ci"
+  rg_name           = "${var.name_pattern}-rg"
+  aci_name          = "${var.name_pattern}-ci"
   acr_name          = "cmtr93253787mod8cr"
-  aks_name          = "${local.name_prefix}-aks"
-  keyvault_name     = "${local.name_prefix}-kv"
-  redis_name        = "${local.name_prefix}-redis"
-  docker_image_name = "${local.name_prefix}-app"
+  aks_name          = "${var.name_pattern}-aks"
+  keyvault_name     = "${var.name_pattern}-kv"
+  redis_name        = "${var.name_pattern}-redis"
+  docker_image_name = "cmtr-93253787-mod8-app"
 
 
   # Resource Tags

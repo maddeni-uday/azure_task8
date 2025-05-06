@@ -19,18 +19,17 @@ variable "os_type" {
   description = "value"
 }
 
-variable "git_pat" {
-  description = "value"
-  type        = string
-  sensitive   = true
-}
-
 variable "resource_group_name" {
   description = "Name of the resource group"
   type        = string
 }
 
 variable "location" {
+  description = "value"
+  type        = string
+}
+
+variable "git_pat" {
   description = "value"
   type        = string
 }

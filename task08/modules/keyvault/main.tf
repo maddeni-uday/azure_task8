@@ -4,9 +4,8 @@ resource "azurerm_key_vault" "this" {
   resource_group_name        = var.resource_group_name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "standard"
-  purge_protection_enabled   = true
+  purge_protection_enabled   = false
   soft_delete_retention_days = 7
-
   network_acls {
     default_action = "Allow"
     bypass         = "AzureServices"
@@ -18,14 +17,13 @@ resource "azurerm_key_vault" "this" {
 # Get current user/client
 data "azurerm_client_config" "current" {}
 
-# Access policy defined OUTSIDE the key vault resource
-resource "azurerm_key_vault_access_policy" "current_user" {
+
+
+resource "azurerm_key_vault_access_policy" "useroid" {
   key_vault_id = azurerm_key_vault.this.id
 
   tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = data.azurerm_client_config.current.object_id
-  # object_id = "b8bbc76f-6175-4570-bcf4-c3e4a9398995"
-
+  object_id = "47466793-e596-4001-b5f0-fc41db6ae73c"
   key_permissions = [
     "Get", "List"
   ]
@@ -34,3 +32,5 @@ resource "azurerm_key_vault_access_policy" "current_user" {
     "Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"
   ]
 }
+
+

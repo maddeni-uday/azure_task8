@@ -3,8 +3,8 @@ data "template_file" "deployment" {
 
   vars = {
     acr_login_server = module.acr.login_server
-    app_image_name   = "redis-flask-app"
-    image_tag        = "v1"
+    app_image_name   = "cmtr-93253787-mod8-app"
+    image_tag        = "ca1"
   }
 }
 
@@ -16,26 +16,19 @@ data "template_file" "secret_provider" {
   template = file("${path.module}/k8s-manifests/secret-provider.yaml.tftpl")
 
   vars = {
-    keyvault_name             = module.keyvault.name
-    tenant_id                 = data.azurerm_client_config.current.tenant_id
-    user_assigned_identity_id = module.aks.kubelet_identity_id
+    aks_kv_access_identity_id  = module.aks.kubelet_identity_id #azurekeyvaultsecretsprovider-cmtr-7850b25e-mod8-aks        
+    kv_name                    = module.keyvault.name
+    tenant_id                  = data.azurerm_client_config.current.tenant_id
+    redis_url_secret_name      = azurerm_key_vault_secret.redis_hostname.name
+    redis_password_secret_name = azurerm_key_vault_secret.redis_primary_key.name
   }
 }
 
-
-provider "kubernetes" {
-  host                   = module.aks.kube_config[0].host
-  client_certificate     = base64decode(module.aks.kube_config[0].client_certificate)
-  client_key             = base64decode(module.aks.kube_config[0].client_key)
-  cluster_ca_certificate = base64decode(module.aks.kube_config[0].cluster_ca_certificate)
-}
-
-
 resource "kubectl_manifest" "deployment" {
 
-  yaml_body  = data.template_file.deployment.rendered
-  depends_on = [module.aks]
-
+  yaml_body        = data.template_file.deployment.rendered
+  depends_on       = [module.aks]
+  wait_for_rollout = true
 }
 
 resource "kubectl_manifest" "secret_provider" {
@@ -44,15 +37,7 @@ resource "kubectl_manifest" "secret_provider" {
 }
 
 resource "kubectl_manifest" "service" {
-  yaml_body = file("${path.module}/k8s-manifests/service.yaml")
-
-  # wait_for {
-  #   field {
-  #     key        = "status.loadBalancer.ingress.[0].ip"
-  #     value      = "^(\\d+(\\.|$)){4}"
-  #     value_type = "regex"
-  #   }
-  # }
+  yaml_body  = file("${path.module}/k8s-manifests/service.yaml")
   depends_on = [kubectl_manifest.deployment]
 }
 
@@ -65,15 +50,15 @@ resource "azurerm_resource_group" "rg" {
 }
 
 module "aci" {
-
-  source               = "./modules/aci"
-  container_group_name = local.aci_name
-  # key_vault_id         = module.keyvault.id
-  dns_name_label      = local.aci_name
-  location            = var.location
-  redis_hostname      = azurerm_key_vault_secret.redis_hostname.value
-  redis_primary_key   = azurerm_key_vault_secret.redis_primary_key.value
-  resource_group_name = azurerm_resource_group.rg.name
+  source                    = "./modules/aci"
+  container_group_name      = local.aci_name
+  dns_name_label            = local.aci_name
+  location                  = var.location
+  user_assigned_identity_id = module.aks.user_Assigned_identity
+  redis_hostname            = azurerm_key_vault_secret.redis_hostname.value
+  redis_primary_key         = azurerm_key_vault_secret.redis_primary_key.value
+  resource_group_name       = azurerm_resource_group.rg.name
+  image                     = "${module.acr.login_server}/cmtr-93253787-mod8-app:ca1"
   tags = {
     tag = "Azure Container Instance"
   }
@@ -95,6 +80,7 @@ module "acr" {
     module.redis,
     module.keyvault
   ]
+
 }
 
 
@@ -118,9 +104,11 @@ module "aks" {
 }
 
 module "keyvault" {
-  source              = "./modules/keyvault"
-  name                = local.keyvault_name
-  location            = azurerm_resource_group.rg.location
+  source   = "./modules/keyvault"
+  name     = local.keyvault_name
+  location = azurerm_resource_group.rg.location
+
+  user_id             = module.aks.kubelet_identity_id
   resource_group_name = azurerm_resource_group.rg.name
   tags = {
     tag = "Key Vault"

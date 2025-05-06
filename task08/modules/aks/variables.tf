@@ -21,7 +21,7 @@ variable "dns_prefix" {
 variable "node_count" {
   description = "Number of nodes"
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "vm_size" {

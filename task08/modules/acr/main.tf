@@ -24,3 +24,5 @@ resource "azurerm_container_registry_task" "example" {
 resource "azurerm_container_registry_task_schedule_run_now" "this" {
   container_registry_task_id = azurerm_container_registry_task.example.id
 }
+
+

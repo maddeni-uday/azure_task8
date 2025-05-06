@@ -8,3 +8,26 @@ output "aks_lb_ip" {
   value       = module.aks.kube_config
   sensitive   = true
 }
+
+output "acr_login" {
+  value = module.acr.login_server
+}
+
+output "managed_identity" {
+  value = module.aks.kubelet_identity_id
+}
+
+output "managed_id" {
+  value = module.aks.user_Assigned_identity
+}
+
+output "user_guid" {
+  description = "value"
+  value       = module.aks.user_guid
+}
+
+output "kubeconfig" {
+  description = "value"
+  value       = module.aks.kube_config
+  sensitive   = true
+}

@@ -1,13 +1,3 @@
-# data "azurerm_key_vault_secret" "redis_hostname" {
-#   name         = "redis-hostname"
-#   key_vault_id = var.key_vault_id
-# }
-
-# data "azurerm_key_vault_secret" "redis_primary_key" {
-#   name         = "redis-primary-key"
-#   key_vault_id = var.key_vault_id
-# }
-
 resource "azurerm_container_group" "container" {
   name                = var.container_group_name
   location            = var.location
@@ -15,7 +5,18 @@ resource "azurerm_container_group" "container" {
   ip_address_type     = "Public"
   os_type             = "Linux"
   restart_policy      = var.restart_policy
+  dns_name_label      = var.dns_name_label
   sku                 = "Standard"
+
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [var.user_assigned_identity_id] # Reference the user-assigned identity
+  }
+
+  image_registry_credential {
+    server                    = "cmtr93253787mod8cr.azurecr.io" # change it to variable later!!!
+    user_assigned_identity_id = var.user_assigned_identity_id
+  }
 
   container {
     name   = var.container_group_name
@@ -30,8 +31,6 @@ resource "azurerm_container_group" "container" {
     }
 
     secure_environment_variables = {
-      # REDIS_URL = data.azurerm_key_vault_secret.redis_hostname.value
-      # REDIS_PWD = data.azurerm_key_vault_secret.redis_primary_key.value
       REDIS_URL = var.redis_hostname
       REDIS_PWD = var.redis_primary_key
     }
@@ -40,8 +39,7 @@ resource "azurerm_container_group" "container" {
       port     = var.port
       protocol = "TCP"
     }
-  }
 
-  dns_name_label = var.dns_name_label
-  tags           = var.tags
+  }
+  tags = var.tags
 }

@@ -18,7 +18,7 @@ variable "container_group_name" {
 variable "name_pattern" {
   description = "value"
   type        = string
-  default     = "cmtr-93253787-mod8"
+  default     = "cmtr-7850b25e-mod8"
 }
 
 variable "key_vault_name" {
@@ -26,14 +26,8 @@ variable "key_vault_name" {
   type        = string
 }
 
-
-# variable "key_vault_id" {
-#   description = "value"
-#   type        = string
-# }
-
 variable "git_pat" {
-  description = "Git Personal Access Token"
+  description = "value"
   type        = string
   sensitive   = true
 }

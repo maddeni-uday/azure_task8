@@ -17,3 +17,8 @@ variable "tags" {
   description = "value"
   type        = map(string)
 }
+
+variable "user_id" {
+  description = "value"
+  type        = string
+}
