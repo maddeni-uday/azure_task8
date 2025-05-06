@@ -8,8 +8,6 @@ locals {
   redis_name        = "${var.name_pattern}-redis"
   docker_image_name = "cmtr-93253787-mod8-app"
 
-
-  # Resource Tags
   common_tags = {
     Creator = "maddeni_uday@epam.com"
   }
